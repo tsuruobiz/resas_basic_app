@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -58,23 +60,26 @@ class _CityListPageState extends State<CityListPage> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              print(snapshot.data);
-              return ListView(
-                children: [
-                  for (final city in cities)
-                    ListTile(
-                      title: Text(city),
-                      subtitle: const Text('政令指定都市'),
-                      trailing: const Icon(Icons.navigate_next),
-                      onTap: () {
-                        Navigator.of(context).push<void>(
-                          MaterialPageRoute(
-                            builder: (context) => CityDetailPage(city: city),
-                          ),
-                        );
-                      },
-                    ),
-                ],
+              final json = jsonDecode(snapshot.data!)['result'] as List;
+              final items = json.cast<Map<String, dynamic>>();
+              return ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return ListTile(
+                    title: Text(item['cityName'] as String),
+                    subtitle: const Text('政令指定都市'),
+                    trailing: const Icon(Icons.navigate_next),
+                    onTap: () {
+                      Navigator.of(context).push<void>(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CityDetailPage(city: item['cityName'] as String),
+                        ),
+                      );
+                    },
+                  );
+                },
               );
             case ConnectionState.none:
             case ConnectionState.waiting:

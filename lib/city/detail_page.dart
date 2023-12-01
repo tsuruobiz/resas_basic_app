@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../env.dart';
 
@@ -80,6 +81,7 @@ class _CityDetailPageState extends State<CityDetailPage> {
 
   // 千円単位の税金を表示するためのフォーマットを行います
   String _formatTaxLabel(int value) {
-    return '${value * 1000}円';
+    final formatted = NumberFormat('#,###').format(value * 1000);
+    return '$formatted円';
   }
 }

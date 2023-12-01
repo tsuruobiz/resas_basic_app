@@ -42,9 +42,14 @@ class _CityDetailPageState extends State<CityDetailPage> {
       appBar: AppBar(
         title: Text(widget.city),
       ),
-      body: Center(
-        child: Text('${widget.city}の詳細画面です'),
-      ),
+      body: FutureBuilder<String>(
+          future: _municipalitiesTaxesFuture,
+          builder: (context, snapshot) {
+            print(snapshot.data);
+            return Center(
+              child: Text('${widget.city}の詳細画面です'),
+            );
+          }),
     );
   }
 }
